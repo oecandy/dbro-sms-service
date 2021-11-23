@@ -1,0 +1,22 @@
+version: '3'
+services:
+  skec-sms-service:
+    image: devsmarf/skec-sms-service:latest
+    container_name: skec-sms-service
+    #    depends_on:
+    #      - mysql or redis or other db
+    volumes:
+      - "/home/ubuntu/skec-sms-service/config:/opt/skec-sms-service/config"
+    restart: always
+    network_mode: host
+#    ports:
+#      - '9000:9000'
+    environment:
+      - 'JVM_MINIMUM_MEMORY=256m'
+      - 'JVM_MAXIMUM_MEMORY=2g'
+      - 'JVM_PROFILE=prod'
+      - 'JVM_ENCODING=UTF-8'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"

@@ -1,0 +1,20 @@
+{:profile-name "dev"
+ :jetty        {:port   9000
+				:join?  false
+				:async? false}
+ :mysql        {:port              3306
+				:db                "skec_sms?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"
+				:host              "54.180.140.227"
+				:user              "smarf"
+				:password          "Sp)VDgC*V1KkHhsG"
+				:make-pool?        true
+				:idle-timeout      60
+				:initial-pool-size 3
+				:minimum-pool-size 3
+				:maximum-pool-size 15}
+ :log          {:level :debug}
+ :mqtt         {:url        "tcp://mqtt.farota.com:1883"
+				:login-info {:username "farotadev"
+							 :password "y!j7DD41-w*uQ!^7"}}
+ :lora         {:url        "tcp://lora.farota.com:1883"
+				:login-info {}}}
