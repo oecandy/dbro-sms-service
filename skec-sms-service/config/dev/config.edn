@@ -4,7 +4,7 @@
 				:async? false}
  :mysql        {:port              3306
 				:db                "skec_sms?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC"
-				:host              "54.180.140.227"
+				:host              "13.125.16.161"
 				:user              "smarf"
 				:password          "Sp)VDgC*V1KkHhsG"
 				:make-pool?        true
@@ -17,4 +17,7 @@
 				:login-info {:username "farotadev"
 							 :password "y!j7DD41-w*uQ!^7"}}
  :lora         {:url        "tcp://lora.farota.com:1883"
-				:login-info {}}}
+				:login-info {}}
+ :scheduler    {:main-timer {:expression  "0 * * * * ?"
+							 :job-key     "jobs.timer.1"
+							 :trigger-key "triggers.timer.1"}}}
