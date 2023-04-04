@@ -11,7 +11,9 @@
 					 :hardware_type
 					 :network_type
 					 :model_id
-					 :serial_no))
+					 :serial_no
+					 :payload
+					 :last_timestamp))
 
 (defn install-sensor-views
 	[]

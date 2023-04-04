@@ -8,11 +8,13 @@
 			  [skec-sms-service.interface :refer [*system*
 												  handle-on-connection-lost]]
 			  [skec-sms-service.mqtt.subscription :as mqtt]
+			  [skec-sms-service.lora.subscription :as lora]
 			  [taoensso.timbre :as timbre]
 			  [integrant.core :as ig]
 			  [korma.db :as d]
 			  [ring.middleware.reload :refer [wrap-reload]]
 			  [config.core :refer [env]]
+			  [skec-sms-service.quartz.scheduler :as scheduler]
 			  [clj-time.core :as t])
 	(:gen-class))
 
@@ -63,20 +65,24 @@
 
 
 (defmethod ig/init-key :lora [_ {:keys [url login-info] :as opt}]
-	;(do
-	;	(let [login-info (merge login-info
-	;							{:opts               {:auto-reconnect true}
-	;							 :on-connection-lost handle-on-connection-lost})
-	;		  result {:client (mh/connect url login-info)}]
-	;		(require 'skec-sms-service.mqtt.message)
-	;		(ig/load-namespaces {:skec-sms-service.mqtt.message {}})
-	;		(mqtt/start-subscription (:client result))
-	;		(into opt result)))
-	)
+	(do
+		(let [login-info (merge login-info
+								{:opts               {:auto-reconnect true}
+								 :on-connection-lost handle-on-connection-lost})
+			  result {:client (mh/connect url login-info)}]
+			(require 'skec-sms-service.lora.message)
+			(ig/load-namespaces {:skec-sms-service.lora.message {}})
+			(lora/start-subscription (:client result))
+			(into opt result))))
 
 (defmethod ig/halt-key! :lora [_ {:keys [client] :as system}]
-	;(mh/disconnect-and-close client)
-	)
+	(mh/disconnect-and-close client))
+
+(defmethod ig/init-key :scheduler [_ info]
+	(do
+		(require 'skec-sms-service.util.sms-message)
+		(ig/load-namespaces {:skec-sms-service.util.sms-message {}})
+		(into {:scheduler (scheduler/scheduler-core info)} info)))
 
 (defmethod ig/init-key :log [_ {:keys [level]}]
 	(timbre/set-level! level))

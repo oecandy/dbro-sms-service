@@ -6,4 +6,5 @@
 (require '[skec-sms-service.view.sms])
 (require '[skec-sms-service.view.sms-template])
 (require '[skec-sms-service.view.msg-template])
+(require '[skec-sms-service.view.scheduler])
 (require '[skec-sms-service.view.raw-query])

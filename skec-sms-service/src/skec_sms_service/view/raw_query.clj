@@ -8,7 +8,7 @@
 (def select-all-sms-message-info
 	(str
 		"SELECT A.sensor_alarm_idx, A.current_value, A.status, "
-		"B.unit, B.sensor_type_name, B.over_state, B.under_state, "
+		"B.unit, B.sensor_type_name, B.level_3_over_state, B.over_state, B.under_state, B.max_state, B.min_state, B.level_3_under_state,"
 		"B.hyper_link_url, C.msg_form, D.group_name "
 		"FROM sensor_alarm A "
 		"LEFT OUTER JOIN sms_template B ON(A.sms_template_idx = B.sms_template_idx) "

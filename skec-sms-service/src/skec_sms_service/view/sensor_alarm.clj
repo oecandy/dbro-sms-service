@@ -12,8 +12,12 @@
 					 :sensor_alarm_name
 					 :sensor_idx
 					 :sensor_key
+					 :level_3_high_value
+					 :highest_value
 					 :higher_value
 					 :lower_value
+					 :lowest_value
+					 :level_3_low_value
 					 :current_value
 					 :contact_group_idx
 					 :status
@@ -21,6 +25,8 @@
 					 :use_start_time
 					 :use_end_time
 					 :use_dow
+					 :alarm_level
+					 :interval
 					 :used))
 
 (defn install-sensor-alarm-views

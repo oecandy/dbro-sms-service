@@ -31,3 +31,9 @@
 		  (fn [keyword conn] keyword))
 
 (defmethod device-message :default [keyword conn])
+
+(defmulti sms-message
+		  "Parsing device payload to sms message"
+		  (fn [keyword conn] keyword))
+
+(defmethod sms-message :default [keyword conn])

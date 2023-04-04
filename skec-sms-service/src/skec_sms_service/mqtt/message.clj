@@ -9,6 +9,19 @@
 
 (defn install-device-messages
 	[]
+	(defmethod device-message [:mqtt :3party :SVS10V1]
+		[_ {:keys [payload
+				   topic_info]}]
+		(let [{:keys [serial_no]} topic_info
+			  result (-> payload
+						 (set/rename-keys {:xFreq  :x-freq
+										   :xSpeed :x-speed
+										   :yFreq  :y-freq
+										   :ySpeed :y-speed
+										   :zFreq  :z-freq
+										   :zSpeed :z-speed}))]
+			result))
+
 	(defmethod device-message [:mqtt :3party :SDT10V1]
 		[_ {:keys [payload
 				   topic_info]}]
@@ -26,6 +39,17 @@
 					  l10
 					  lmax]} payload]
 			payload))
+
+	(defmethod device-message [:mqtt :3party :SKW10V1]
+		[_ {:keys [payload
+				   topic_info]}]
+		(let [{:keys [serial_no]} topic_info
+			  {:keys [windspeed
+					  maxspeed
+					  avgwind]} payload]
+			{:windSpeed windspeed
+			 :maxSpeed maxspeed
+			 :avgWind avgwind}))
 
 	(defmethod device-message [:mqtt :wifi :weather]
 		[_ {:keys [payload
@@ -49,6 +73,7 @@
 									   :pressure
 									   :uv])
 						 (util/update-map read-string)
+						 (update :wind-speed * 0.28)
 						 (util/update-map util/fix-2-float-point))]
 			result))
 
@@ -56,11 +81,24 @@
 		[_ {:keys [payload
 				   topic_info]}]
 		(let [{:keys [serial_no]} topic_info
-			  {:keys [co
-					  o2
-					  h2s
-					  ch4
-					  co2]} payload]
-			payload)))
+			  result (-> payload
+						 (set/rename-keys {:CO  :co
+										   :CO2 :co2
+										   :O2  :o2
+										   :CH4 :ch4
+										   :H2S :h2s})
+						 (update :o2 / 100)
+						 (update :co / 100)
+						 (update :h2s / 100))]
+			result))
+
+	(defmethod device-message [:mqtt :out :WT30V1]
+		[_ {:keys [payload
+				   topic_info]}]
+		(let [{:keys [serial_no]} topic_info
+			  result (if (not (nil? (:wbgt payload)))
+						 payload
+						 nil)]
+			result)))
 
 (install-device-messages)

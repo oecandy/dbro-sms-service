@@ -5,6 +5,8 @@
 												  *system*
 												  handle-on-connection-lost
 												  device-message]]
+			  [clj-time.core :as t]
+			  [clj-time.coerce :as tc]
 			  [taoensso.timbre :as timbre]
 			  [skec-sms-service.util.core :as util]
 			  [skec-sms-service.domain.sensor :as sensor]))
@@ -36,11 +38,11 @@
 		(timbre/debug payload-info)
 		(timbre/debug [:mqtt (keyword network_type) (keyword hardware_type)])
 		(if (not (nil? payload-info))
-			(case hardware_type
-				("SDT10V1" "SSD10V1" "weather" "skecw12b")
-				(sensor/process-sk-sensor device-map payload-info)
-				:default
-				nil))))
+			(do
+				(view [:sensor :update] {:sensor_idx sensor_idx
+										 :payload    (util/map-to-json payload-info)
+										 :last_timestamp (tc/to-sql-time (t/now))})
+				(sensor/process-sk-sensor device-map payload-info)))))
 
 (defn get-topic-info
 	"example topic 'farota/{network_type}/{hardware_type}/{serial_no}/data'"
@@ -85,10 +87,11 @@
 	"mqtt subscribe start"
 	[client]
 	(when-let [c client]
-		(timbre/info "LoRa MQTT subscribe start!")
+		(timbre/info "MQTT subscribe start!")
 		(try
 			(mh/subscribe c {"/farota/wifi/weather/+/loop" 2} handle-delivery)
 			(mh/subscribe c {"farota/3party/+/+/data" 2} handle-delivery)
 			(mh/subscribe c {"farota/eth/skecw12b/#" 2} handle-delivery)
+			(mh/subscribe c {"farota/out/WT30V1/+/data" 2} handle-delivery)
 			(catch Exception e
 				(mh/disconnect c)))))

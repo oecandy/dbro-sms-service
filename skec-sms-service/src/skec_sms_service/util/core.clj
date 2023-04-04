@@ -42,7 +42,7 @@
 (defn get-string-byte-length
 	"String -> byte array -> get length of byte array"
 	[str]
-	(alength (.getBytes str)))
+	(alength (.getBytes str "euc-kr")))
 
 (defn json-to-map
 	"Json -> Map"

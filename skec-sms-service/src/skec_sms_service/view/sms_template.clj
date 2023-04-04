@@ -11,8 +11,12 @@
 					 :msg_template_idx
 					 :sms_template_name
 					 :sensor_type_name
+					 :level_3_over_state
+					 :max_state
 					 :over_state
 					 :under_state
+					 :min_state
+					 :level_3_under_state
 					 :hyper_link_url
 					 :unit))
 
